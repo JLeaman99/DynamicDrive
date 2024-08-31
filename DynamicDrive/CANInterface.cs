@@ -46,7 +46,7 @@ namespace DynamicDrive
 
         }
 
-        public async Task CANReadAsync()
+        public async Task CANReadAsync(TextBox AllData, TextBox EngRPM, TextBox CarSpeed)
         {
 
             while (true)
@@ -56,7 +56,12 @@ namespace DynamicDrive
                 VehicleSpeed vehicleSpeed = await car.RequestDataAsync<VehicleSpeed>();
 
                 carData.EngineRPM = engineRpm;
-                carData.VehicleSpeed = vehicleSpeed;    
+                carData.VehicleSpeed = vehicleSpeed;
+                System.Diagnostics.Debug.WriteLine("Engine RPM: "+ engineRpm.ToString() + " Car Speed:" + vehicleSpeed.ToString());
+                AllData.AppendText("Engine RPM: " + engineRpm.ToString() + " Car Speed:" + vehicleSpeed.ToString()); 
+                EngRPM.Text = engineRpm.ToString();
+                CarSpeed.Text = vehicleSpeed.ToString();
+
                 Thread.Sleep(100);
             }
 
@@ -64,12 +69,12 @@ namespace DynamicDrive
    
 
 
-        public async void CANMonitor()
+        public async void CANMonitor(TextBox AllData, TextBox EngRPM, TextBox CarSpeed)
         {
             /**
              * This Will be the Main thread to monitor CAN Network for changes in Speed, Steering, Gearing, Other Telemetry to cause changes in Music
              */
-            await Task.Run(async () => await this.CANReadAsync());
+            await Task.Run(async () => await this.CANReadAsync(AllData, EngRPM, CarSpeed));
         }
 
         public int ChangeTune()
@@ -94,8 +99,8 @@ namespace DynamicDrive
         public override string ToString()
         {
 
-            if(data != null)
-                return String.Format("Engine RPM: {0}, Vehicle Speed {1}, OBD2 Raw Data {2}", EngineRPM.ToString(), VehicleSpeed.ToString(), data.ToString());
+            //if(data != null)
+            //    return String.Format("Engine RPM: {0}, Vehicle Speed {1}, OBD2 Raw Data {2}", EngineRPM.ToString(), VehicleSpeed.ToString(), data.ToString());
 
             return String.Format("Engine RPM: {0}, Vehicle Speed {1}", EngineRPM.ToString(), VehicleSpeed.ToString());
 

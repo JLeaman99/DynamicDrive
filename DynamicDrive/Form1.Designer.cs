@@ -30,14 +30,14 @@
         {
             car_tb = new TextBox();
             label1 = new Label();
-            textBox1 = new TextBox();
+            carSpd_tb = new TextBox();
             textBox2 = new TextBox();
             label2 = new Label();
             label3 = new Label();
             label4 = new Label();
             label5 = new Label();
             textBox3 = new TextBox();
-            textBox4 = new TextBox();
+            engRPM_tb = new TextBox();
             label6 = new Label();
             nowPlayingTB = new TextBox();
             label7 = new Label();
@@ -63,12 +63,12 @@
             label1.TabIndex = 1;
             label1.Text = "Realtime Car Values";
             // 
-            // textBox1
+            // carSpd_tb
             // 
-            textBox1.Location = new Point(492, 195);
-            textBox1.Name = "textBox1";
-            textBox1.Size = new Size(100, 23);
-            textBox1.TabIndex = 2;
+            carSpd_tb.Location = new Point(492, 195);
+            carSpd_tb.Name = "carSpd_tb";
+            carSpd_tb.Size = new Size(100, 23);
+            carSpd_tb.TabIndex = 2;
             // 
             // textBox2
             // 
@@ -100,9 +100,9 @@
             label4.AutoSize = true;
             label4.Location = new Point(649, 248);
             label4.Name = "label4";
-            label4.Size = new Size(83, 15);
+            label4.Size = new Size(123, 15);
             label4.TabIndex = 9;
-            label4.Text = "Raw Gear Data";
+            label4.Text = "Raw Engine RPM Data";
             label4.Click += label4_Click;
             // 
             // label5
@@ -110,9 +110,9 @@
             label5.AutoSize = true;
             label5.Location = new Point(492, 247);
             label5.Name = "label5";
-            label5.Size = new Size(31, 15);
+            label5.Size = new Size(71, 15);
             label5.TabIndex = 8;
-            label5.Text = "Gear";
+            label5.Text = "Engine RPM";
             // 
             // textBox3
             // 
@@ -121,12 +121,12 @@
             textBox3.Size = new Size(100, 23);
             textBox3.TabIndex = 7;
             // 
-            // textBox4
+            // engRPM_tb
             // 
-            textBox4.Location = new Point(492, 265);
-            textBox4.Name = "textBox4";
-            textBox4.Size = new Size(100, 23);
-            textBox4.TabIndex = 6;
+            engRPM_tb.Location = new Point(492, 265);
+            engRPM_tb.Name = "engRPM_tb";
+            engRPM_tb.Size = new Size(100, 23);
+            engRPM_tb.TabIndex = 6;
             // 
             // label6
             // 
@@ -196,11 +196,11 @@
             Controls.Add(label4);
             Controls.Add(label5);
             Controls.Add(textBox3);
-            Controls.Add(textBox4);
+            Controls.Add(engRPM_tb);
             Controls.Add(label3);
             Controls.Add(label2);
             Controls.Add(textBox2);
-            Controls.Add(textBox1);
+            Controls.Add(carSpd_tb);
             Controls.Add(label1);
             Controls.Add(car_tb);
             Name = "Form1";
@@ -213,14 +213,14 @@
 
         private TextBox car_tb;
         private Label label1;
-        private TextBox textBox1;
+        private TextBox carSpd_tb;
         private TextBox textBox2;
         private Label label2;
         private Label label3;
         private Label label4;
         private Label label5;
         private TextBox textBox3;
-        private TextBox textBox4;
+        private TextBox engRPM_tb;
         private Label label6;
         private TextBox nowPlayingTB;
         private Label label7;

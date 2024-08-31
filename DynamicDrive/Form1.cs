@@ -59,8 +59,39 @@ namespace DynamicDrive
             }
             else
             {
-                myCar.CANMonitor();
-                car_tb.AppendText(myCar.carData.ToString());
+                myCar.CANMonitor(car_tb,engRPM_tb,carSpd_tb);
+                //car_tb.AppendText(myCar.carData.ToString());
+                switch (myCar.carData.VehicleSpeed.Speed)
+                {
+                    case 0:
+                        ChangeQueue(0);
+                        break;
+
+                    case int n when n>0:
+                        ChangeQueue(1);
+                        break;
+                    case int n when n > 20:
+                        ChangeQueue(2);
+                    break;
+
+                    case int n when n > 40:
+                        ChangeQueue(3);
+                        break;
+                    case int n when n > 50:
+                        ChangeQueue(3);
+                        break;
+
+                    case int n when n > 70:
+                        ChangeQueue(3);
+                        break;
+
+                    case int n when n > 80:
+                        ChangeQueue(3);
+                        break;
+
+
+
+                }
             }
         }
         private void button1_Click(object sender, EventArgs e)
@@ -73,12 +104,42 @@ namespace DynamicDrive
 
         }
 
+        public void ChangeQueue(int step)
+        {
+            if(counter > step)
+            {
+              while (counter > step)
+                {
+                    RemoveFromQueue(currentPlaying, testObjects[counter]);
+                    counter--;
+                }
+            }
+            else if(counter == step)
+            {
+                AddToQueue(currentPlaying, testObjects[counter]);
+            }
+            else
+            {
+                while(counter < step)
+                {
+                    AddToQueue(currentPlaying, testObjects[counter]);
+                    counter++;
+                }
+
+            }
+        }
+
         public void AddToQueue(List<SoundObject> queue, SoundObject additional)
         {
-            player.StopAll(queue);
-            queue.Add(additional);
-            player.PlaySelect(queue);
-            UpdateNowPlayingTB(queue);
+
+            if (!queue.Contains(additional))
+            {
+                player.StopAll(queue);
+                queue.Add(additional);
+                player.PlaySelect(queue);
+                UpdateNowPlayingTB(queue);
+            }
+            
 
         }
 
