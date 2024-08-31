@@ -78,15 +78,15 @@ namespace DynamicDrive
                         ChangeQueue(3);
                         break;
                     case int n when n > 50:
-                        ChangeQueue(3);
+                        ChangeQueue(4);
                         break;
 
                     case int n when n > 70:
-                        ChangeQueue(3);
+                        ChangeQueue(5);
                         break;
 
                     case int n when n > 80:
-                        ChangeQueue(3);
+                        ChangeQueue(6);
                         break;
 
 
