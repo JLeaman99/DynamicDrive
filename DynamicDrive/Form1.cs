@@ -41,6 +41,8 @@ namespace DynamicDrive
             player = new MusicHandler(testObjects);
             myCar = new CANInterface();
             PlayQueue(currentPlaying);
+
+            CarLoop();
         }
 
         private void label4_Click(object sender, EventArgs e)
@@ -48,6 +50,19 @@ namespace DynamicDrive
 
         }
 
+
+        public void CarLoop()
+        {
+            if (myCar == null)
+            {
+                return;
+            }
+            else
+            {
+                myCar.CANMonitor();
+                car_tb.AppendText(myCar.carData.ToString());
+            }
+        }
         private void button1_Click(object sender, EventArgs e)
         {
             if (counter < 7)

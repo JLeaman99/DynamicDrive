@@ -26,7 +26,7 @@ namespace DynamicDrive
             comPort = "COM5"; //COM5 Left USB 3, COM6 RIGHT BOTTOM USB, COM7 RIGHT TOP USB
             connection = new SerialConnection(comPort);
             car  = new ELM327(connection, new OBDConsoleLogger(OBDLogLevel.Debug));
-           // car.Initialize();
+            car.Initialize();
             carData = new CarData();
         }   
 
@@ -88,7 +88,17 @@ namespace DynamicDrive
     {
        public EngineRPM EngineRPM;
         public VehicleSpeed VehicleSpeed;
-        public IOBDData data = null;   
+        public IOBDData data = null;
         //ADD Other data Types as needed
+
+        public override string ToString()
+        {
+
+            if(data != null)
+                return String.Format("Engine RPM: {0}, Vehicle Speed {1}, OBD2 Raw Data {2}", EngineRPM.ToString(), VehicleSpeed.ToString(), data.ToString());
+
+            return String.Format("Engine RPM: {0}, Vehicle Speed {1}", EngineRPM.ToString(), VehicleSpeed.ToString());
+
+        }
     }
 }
