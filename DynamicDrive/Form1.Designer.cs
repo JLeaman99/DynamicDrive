@@ -44,6 +44,8 @@
             allNamesTb = new TextBox();
             button1 = new Button();
             button2 = new Button();
+            speedChange_tb = new TextBox();
+            button3 = new Button();
             SuspendLayout();
             // 
             // car_tb
@@ -182,11 +184,30 @@
             button2.UseVisualStyleBackColor = true;
             button2.Click += button2_Click;
             // 
+            // speedChange_tb
+            // 
+            speedChange_tb.Location = new Point(22, 244);
+            speedChange_tb.Name = "speedChange_tb";
+            speedChange_tb.Size = new Size(100, 23);
+            speedChange_tb.TabIndex = 16;
+            // 
+            // button3
+            // 
+            button3.Location = new Point(128, 244);
+            button3.Name = "button3";
+            button3.Size = new Size(75, 44);
+            button3.TabIndex = 17;
+            button3.Text = "Change Speed";
+            button3.UseVisualStyleBackColor = true;
+            button3.Click += button3_Click;
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 450);
+            Controls.Add(button3);
+            Controls.Add(speedChange_tb);
             Controls.Add(button2);
             Controls.Add(button1);
             Controls.Add(label7);
@@ -227,5 +248,7 @@
         private TextBox allNamesTb;
         private Button button1;
         private Button button2;
+        private TextBox speedChange_tb;
+        private Button button3;
     }
 }

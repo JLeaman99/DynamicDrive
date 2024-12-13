@@ -15,6 +15,7 @@ using System.Threading;
 
 
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.TrackBar;
+using System.Security.Permissions;
 namespace DynamicDrive
 {
   
@@ -25,6 +26,13 @@ namespace DynamicDrive
         private bool isLooping = false;
         public String FileName;
         public String TrackName;
+
+        private Thread RunningThread;
+
+
+        public List<SoundObject> allSounds;
+
+
         private long volLng = 500; // 0->1000
         
         int counter = 0;
@@ -38,6 +46,12 @@ namespace DynamicDrive
             this.TrackName = sounds.trackName;
             this.FileName = sounds.track;
             
+        }
+        public MusicPlayer() { }
+
+        public MusicPlayer(List<SoundObject> applicable)
+        {
+            allSounds = applicable;
         }
 
         public int GetVolume()
@@ -119,6 +133,77 @@ namespace DynamicDrive
 
         }
 
+        public void PlayAll()
+        {
+            StringBuilder sb;
+            isLooping = true;
+            for(int i=0; i< allSounds.Count; i++)
+            {
+                sb = new StringBuilder();
+                int result = mciSendString("open \"" + allSounds[i].track + "\" type waveaudio  alias " + allSounds[i].trackName, sb, 0, IntPtr.Zero);
+                mciSendString("play " + allSounds[i].trackName, sb, 0, IntPtr.Zero);
+                isBeingPlayed = true;
+                sb.Clear();
+            }
+           
+            // Check Status of First Track, if First Track ended replay all
+            sb = new StringBuilder();
+            mciSendString("status " + allSounds[0].trackName + " length", sb, 255, IntPtr.Zero);
+            int length = Convert.ToInt32(sb.ToString());
+            int pos = 0;
+
+            //System.Diagnostics.Debug.WriteLine("length" + length);
+
+
+            while (isBeingPlayed)
+            {
+                sb.Clear();
+                sb = new StringBuilder();
+                mciSendString("status " + allSounds[0].trackName + " position", sb, 255, IntPtr.Zero);
+                pos = Convert.ToInt32(sb.ToString());
+                //System.Diagnostics.Debug.WriteLine("pos" + pos);
+
+                if (pos >= length)
+                {
+                    if (!isLooping)
+                    {
+                        isBeingPlayed = false;
+                        hasEnded = true;
+                        break;
+                    }
+                    else
+                    {
+                        System.Diagnostics.Debug.WriteLine("Count " + allSounds.Count);
+
+
+                        Parallel.For(0, allSounds.Count, j =>
+                        {
+                            System.Diagnostics.Debug.WriteLine(String.Format("J: {0}, TrackName: {1}", j, allSounds[j].trackName));
+                            
+                            mciSendString("open \"" + allSounds[j].track + "\" type waveaudio  alias " + allSounds[j].trackName, sb, 0, IntPtr.Zero);
+                            mciSendString("play " + allSounds[j].trackName + " from 0", sb, 0, IntPtr.Zero); });
+                        
+
+                    }
+                }
+                else
+                {
+                    hasEnded = false;
+                }
+
+                
+
+
+            }
+            for(int i=0; i< allSounds.Count; i++)
+            {
+                mciSendString("stop " + allSounds[i].trackName, sb, 0, IntPtr.Zero);
+                mciSendString("close " + allSounds[i].trackName, sb, 0, IntPtr.Zero);
+            }
+           
+
+        }
+
         public void Play(bool loop)
         {
             try
@@ -134,8 +219,11 @@ namespace DynamicDrive
                 this.isLooping=loop;
 
                 ThreadStart ts = new ThreadStart(PlayFunction);
-                Thread WorkerThread = new Thread(ts);
-                WorkerThread.Start();   
+            
+               
+
+                //Thread WorkerThread = new Thread(ts);
+                //WorkerThread.Start();   
             }
             catch (Exception e)
             {
@@ -144,13 +232,55 @@ namespace DynamicDrive
             }
         }
 
+        public void Play()
+        {
+            try
+            {
+                if (isBeingPlayed)
+                    return;
+                if (!File.Exists(allSounds[0].track))
+                {
+                    isBeingPlayed = true;
+                    System.Diagnostics.Debug.WriteLine("File Does Not Exist");
+                    return;
+                }
+                //PlayAll();
+                ThreadStart ts = new ThreadStart(PlayAll);
+                if(RunningThread!= null && RunningThread.IsAlive)
+                {
+                    Stop();
+                    if (!RunningThread.Join(250))
+                    {
+                        RunningThread.Abort();
+                    }
+                    RunningThread = new Thread(ts);
+                    RunningThread.Start();
+                }
+                else
+                {
+                    System.Diagnostics.Debug.WriteLine("Running Thread was null");
+                    RunningThread = new Thread(ts);
+                    RunningThread.Start(); 
+                }
+                
+
+                //Thread WorkerThread = new Thread(ts);
+                //WorkerThread.Start();
+            }
+            catch (Exception e)
+            {
+                System.Diagnostics.Debug.WriteLine(e.ToString());
+
+            }
+        }
+
+        [SecurityPermissionAttribute(SecurityAction.Demand, ControlThread = true)]
         public void Stop()
         {
             isBeingPlayed = false;
-            //StringBuilder sb = new StringBuilder();
-            //mciSendString("stop " + this.TrackName, sb, 0, IntPtr.Zero);
-            //System.Diagnostics.Debug.WriteLine("Stopping" + this.TrackName);
            
+            //System.Diagnostics.Debug.WriteLine("Stopping" + this.TrackName);
+
         }
 
 
@@ -195,15 +325,15 @@ namespace DynamicDrive
         
         String SoundName;
        
-        MusicPlayer[] music;
+        MusicPlayer music;
         SoundObject[] array;
         public MusicHandler(SoundObject[] needed )
         {
            array = needed;
-            music = new MusicPlayer[7];
-            for(int i = 0; i < 7; i++)
+            music = new MusicPlayer();
+            for (int i = 0; i < 7; i++)
             {
-                music[i] = new MusicPlayer(array[i]);
+                music = new MusicPlayer(array[i]);
 
             }
             // PlayAll(testObjects);
@@ -216,24 +346,11 @@ namespace DynamicDrive
         /// <summary>
         /// TODO Add Functionality to add/remove tracks from the list
         /// </summary>
-        public void PlayAll()
-        {
-           
-            for(int i=0; i<7; i++)
-            {
-                music[i].Play(true);
-            }
-            
-            System.Diagnostics.Debug.WriteLine("Playing Music");
-        }
-
+        
         public void StopAll(List<SoundObject> applicable)
         {
-            for (int i = 0; i < applicable.Count; i++)
-            {
-                music[i].Stop();
-
-            }
+            music.isBeingPlayed = false;    
+            music.Stop();
         }
 
         /// <summary>
@@ -242,12 +359,16 @@ namespace DynamicDrive
         /// <param name="applicable"></param>
         public void PlaySelect(List<SoundObject> applicable)
         {
-            for (int i=0; i < applicable.Count; i++)
-            {
-                music[i] = new MusicPlayer(applicable[i]);
-                music[i].Play(true);
+            //for (int i=0; i < applicable.Count; i++)
+            //{
+            //    music[i] = new MusicPlayer(applicable[i]);
+            //    music[i].Play(true);
 
-            }
+            //}
+
+            //music = new MusicPlayer(applicable);
+            music.allSounds = applicable;
+            music.Play();
         }
 
     }

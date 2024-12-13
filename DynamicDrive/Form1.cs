@@ -1,3 +1,5 @@
+using System.Timers;
+
 namespace DynamicDrive
 {
 
@@ -9,8 +11,10 @@ namespace DynamicDrive
         String FolderPath;
         SoundObject[] testObjects;
         int counter = 1;
+        int test = 0, currentPlayingLevel=0;
 
         List<SoundObject> currentPlaying;
+        System.Timers.Timer carloopTimer, musicTimer;
         public Form1()
         {
             InitializeComponent();
@@ -39,10 +43,21 @@ namespace DynamicDrive
             nowPlayingTB.AppendText(testObjects[0].trackName + "\n");
 
             player = new MusicHandler(testObjects);
-            myCar = new CANInterface();
+            //myCar = new CANInterface();
+
+            carloopTimer = new System.Timers.Timer(50);
+            carloopTimer.Elapsed += CarLoop;
+            carloopTimer.AutoReset = true;
+            carloopTimer.Start();
+
+            //musicTimer = new System.Timers.Timer(500);
+            ////musicTimer.Elapsed += CheckStatus;
+            //musicTimer.AutoReset = true;
+            //musicTimer.Start();
+
             PlayQueue(currentPlaying);
 
-            CarLoop();
+            //CarLoop();
         }
 
         private void label4_Click(object sender, EventArgs e)
@@ -51,49 +66,43 @@ namespace DynamicDrive
         }
 
 
-        public void CarLoop()
+        public void CarLoop(object sender, ElapsedEventArgs e)
         {
-            if (myCar == null)
+            if (myCar!=null) //myCar == null
             {
                 return;
             }
             else
             {
-                myCar.CANMonitor(car_tb,engRPM_tb,carSpd_tb);
+                //myCar.CANMonitor(car_tb, engRPM_tb, carSpd_tb);
                 //car_tb.AppendText(myCar.carData.ToString());
-                switch (myCar.carData.VehicleSpeed.Speed)
+                System.Diagnostics.Debug.WriteLine(test);
+                int change = GetRangeLevel(test);
+                if(change != currentPlayingLevel)
                 {
-                    case 0:
-                        ChangeQueue(0);
-                        break;
-
-                    case int n when n>0:
-                        ChangeQueue(1);
-                        break;
-                    case int n when n > 20:
-                        ChangeQueue(2);
-                    break;
-
-                    case int n when n > 40:
-                        ChangeQueue(3);
-                        break;
-                    case int n when n > 50:
-                        ChangeQueue(4);
-                        break;
-
-                    case int n when n > 70:
-                        ChangeQueue(5);
-                        break;
-
-                    case int n when n > 80:
-                        ChangeQueue(6);
-                        break;
-
-
-
+                    currentPlayingLevel = change;
+                    ChangeQueue(change);
                 }
             }
         }
+
+        private int GetRangeLevel(int range)
+        {
+            int level = range switch
+            {
+                int i when i == 0 => 0,
+                int i when i > 0 && i <= 20 => 1,
+                int i when i > 20 && i <= 40 => 2,
+                int i when i > 40 && i <= 50 => 3,
+                int i when i > 50 && i <= 60 => 4,
+                int i when i > 60 && i <= 70 => 5,
+                int i when i > 70 => 6,
+             
+                _ => 0
+            };
+            return level;
+        }
+
         private void button1_Click(object sender, EventArgs e)
         {
             if (counter < 7)
@@ -106,21 +115,21 @@ namespace DynamicDrive
 
         public void ChangeQueue(int step)
         {
-            if(counter > step)
+            if (counter > step)
             {
-              while (counter > step)
+                while (counter >= step)
                 {
                     RemoveFromQueue(currentPlaying, testObjects[counter]);
                     counter--;
                 }
             }
-            else if(counter == step)
+            else if (counter == step)
             {
                 AddToQueue(currentPlaying, testObjects[counter]);
             }
             else
             {
-                while(counter < step)
+                while (counter <= step)
                 {
                     AddToQueue(currentPlaying, testObjects[counter]);
                     counter++;
@@ -139,17 +148,34 @@ namespace DynamicDrive
                 player.PlaySelect(queue);
                 UpdateNowPlayingTB(queue);
             }
-            
+
 
         }
 
         public void UpdateNowPlayingTB(List<SoundObject> queue)
         {
-            nowPlayingTB.Clear();
-            for (int i = 0; i < queue.Count; i++)
+            try
             {
-                nowPlayingTB.AppendText(queue[i].trackName + "\n");
+                if(nowPlayingTB.InvokeRequired)
+                {
+                    Action safeWrite = delegate { UpdateNowPlayingTB(queue);  };
+                    nowPlayingTB.Invoke(safeWrite);
+                }
+                else
+                {
+                    nowPlayingTB.Clear();
+                    for (int i = 0; i < queue.Count; i++)
+                    {
+                        nowPlayingTB.AppendText(queue[i].trackName + "\n");
+                    }
+                }
+                
             }
+            catch (Exception e)
+            {
+
+            }
+          
         }
 
         public void RemoveFromQueue(List<SoundObject> queue, SoundObject removal)
@@ -172,16 +198,35 @@ namespace DynamicDrive
 
         }
 
+        //public void CheckStatus(object sender, ElapsedEventArgs e)
+        //{
+
+        //    if (player.music[0].checkStatus())
+        //    {
+        //        System.Diagnostics.Debug.WriteLine("WE OUT");
+        //        Parallel.For(0, currentPlaying.Count, (i) =>
+        //        {
+        //            player.music[i].loopPlay();
+        //        });
+        //    }
+        //}
+
         private void button2_Click(object sender, EventArgs e)
         {
             if (counter <= 7 && counter > 0)
             {
                 counter--;
                 RemoveFromQueue(currentPlaying, testObjects[counter]);
-                
+
             }
             if (counter > 7)
                 counter--;
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            if(speedChange_tb.TextLength != 0)
+                test = int.Parse(speedChange_tb.Text);
         }
     }
 }
