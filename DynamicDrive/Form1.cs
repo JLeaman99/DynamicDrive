@@ -10,7 +10,7 @@ namespace DynamicDrive
         String BackingTrack, First, Second, Third, Fourth, Fifth, Sixth;
         String FolderPath;
         SoundObject[] testObjects;
-        int counter = 1;
+        int counter = 0;
         int test = 0, currentPlayingLevel=0;
 
         List<SoundObject> currentPlaying;
@@ -76,7 +76,7 @@ namespace DynamicDrive
             {
                 //myCar.CANMonitor(car_tb, engRPM_tb, carSpd_tb);
                 //car_tb.AppendText(myCar.carData.ToString());
-                System.Diagnostics.Debug.WriteLine(test);
+                //System.Diagnostics.Debug.WriteLine(test);
                 int change = GetRangeLevel(test);
                 if(change != currentPlayingLevel)
                 {
@@ -96,7 +96,8 @@ namespace DynamicDrive
                 int i when i > 40 && i <= 50 => 3,
                 int i when i > 50 && i <= 60 => 4,
                 int i when i > 60 && i <= 70 => 5,
-                int i when i > 70 => 6,
+                int i when i > 70 && i<= 80=> 6,
+                int i when i >80 => 7,
              
                 _ => 0
             };
@@ -115,12 +116,44 @@ namespace DynamicDrive
 
         public void ChangeQueue(int step)
         {
+            if (counter <= 7 && counter >= 0)
+            {
+                if (counter > step)
+                {
+                    while (counter > step)
+                    {
+                        counter--;
+                        RemoveFromQueue(currentPlaying, testObjects[counter]);
+                    }
+                }
+                else
+                {
+                    while (counter < step)
+                    {
+                        AddToQueue(currentPlaying, testObjects[counter]);
+                        counter++;
+                    }
+                }
+            }
+            else if (counter > 7)
+            {
+                counter = 7;
+            }
+            else
+                counter = 0;
+        }
+
+        public void ChangeQueueO(int step)
+        {
             if (counter > step)
             {
                 while (counter >= step)
                 {
+                    System.Diagnostics.Debug.WriteLine(String.Format("Counter Value: {0}, TestObjectsL: {1}, CurrentPlayingL {2}", counter, testObjects.Length, currentPlaying.Count));
                     RemoveFromQueue(currentPlaying, testObjects[counter]);
                     counter--;
+                    if (counter < 0)
+                        counter = 0;
                 }
             }
             else if (counter == step)
@@ -133,6 +166,8 @@ namespace DynamicDrive
                 {
                     AddToQueue(currentPlaying, testObjects[counter]);
                     counter++;
+                    if (counter > 6)
+                        counter = 6;
                 }
 
             }

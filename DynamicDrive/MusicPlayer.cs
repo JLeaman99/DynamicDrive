@@ -23,7 +23,7 @@ namespace DynamicDrive
     {
                
         public bool isBeingPlayed = false;
-        private bool isLooping = false;
+        private bool isLooping = false,  StopNow = false;
         public String FileName;
         public String TrackName;
 
@@ -135,72 +135,77 @@ namespace DynamicDrive
 
         public void PlayAll()
         {
-            StringBuilder sb;
-            isLooping = true;
-            for(int i=0; i< allSounds.Count; i++)
-            {
-                sb = new StringBuilder();
-                int result = mciSendString("open \"" + allSounds[i].track + "\" type waveaudio  alias " + allSounds[i].trackName, sb, 0, IntPtr.Zero);
-                mciSendString("play " + allSounds[i].trackName, sb, 0, IntPtr.Zero);
-                isBeingPlayed = true;
-                sb.Clear();
-            }
-           
-            // Check Status of First Track, if First Track ended replay all
-            sb = new StringBuilder();
-            mciSendString("status " + allSounds[0].trackName + " length", sb, 255, IntPtr.Zero);
-            int length = Convert.ToInt32(sb.ToString());
-            int pos = 0;
-
-            //System.Diagnostics.Debug.WriteLine("length" + length);
-
-
-            while (isBeingPlayed)
-            {
-                sb.Clear();
-                sb = new StringBuilder();
-                mciSendString("status " + allSounds[0].trackName + " position", sb, 255, IntPtr.Zero);
-                pos = Convert.ToInt32(sb.ToString());
-                //System.Diagnostics.Debug.WriteLine("pos" + pos);
-
-                if (pos >= length)
+            if (!StopNow) {
+                StringBuilder sb;
+                isLooping = true;
+                for (int i = 0; i < allSounds.Count; i++)
                 {
-                    if (!isLooping)
+                    sb = new StringBuilder();
+                    int result = mciSendString("open \"" + allSounds[i].track + "\" type waveaudio  alias " + allSounds[i].trackName, sb, 0, IntPtr.Zero);
+                    mciSendString("play " + allSounds[i].trackName, sb, 0, IntPtr.Zero);
+                    isBeingPlayed = true;
+                    sb.Clear();
+                }
+
+                // Check Status of First Track, if First Track ended replay all
+                sb = new StringBuilder();
+                mciSendString("status " + allSounds[0].trackName + " length", sb, 255, IntPtr.Zero);
+                int length = Convert.ToInt32(sb.ToString());
+                int pos = 0;
+
+                //System.Diagnostics.Debug.WriteLine("length" + length);
+
+
+                while (isBeingPlayed)
+                {
+                    sb.Clear();
+                    sb = new StringBuilder();
+                    mciSendString("status " + allSounds[0].trackName + " position", sb, 255, IntPtr.Zero);
+                    pos = Convert.ToInt32(sb.ToString());
+                    //System.Diagnostics.Debug.WriteLine("pos" + pos);
+
+                    if (pos >= length)
                     {
-                        isBeingPlayed = false;
-                        hasEnded = true;
-                        break;
+                        if (!isLooping)
+                        {
+                            isBeingPlayed = false;
+                            hasEnded = true;
+                            break;
+                        }
+                        else
+                        {
+                            System.Diagnostics.Debug.WriteLine("Count " + allSounds.Count);
+
+
+                            Parallel.For(0, allSounds.Count, j =>
+                            {
+                                //System.Diagnostics.Debug.WriteLine(String.Format("J: {0}, TrackName: {1}", j, allSounds[j].trackName));
+
+                                mciSendString("open \"" + allSounds[j].track + "\" type waveaudio  alias " + allSounds[j].trackName, sb, 0, IntPtr.Zero);
+                                mciSendString("play " + allSounds[j].trackName + " from 0", sb, 0, IntPtr.Zero); });
+
+
+                        }
                     }
                     else
                     {
-                        System.Diagnostics.Debug.WriteLine("Count " + allSounds.Count);
-
-
-                        Parallel.For(0, allSounds.Count, j =>
-                        {
-                            System.Diagnostics.Debug.WriteLine(String.Format("J: {0}, TrackName: {1}", j, allSounds[j].trackName));
-                            
-                            mciSendString("open \"" + allSounds[j].track + "\" type waveaudio  alias " + allSounds[j].trackName, sb, 0, IntPtr.Zero);
-                            mciSendString("play " + allSounds[j].trackName + " from 0", sb, 0, IntPtr.Zero); });
-                        
-
+                        hasEnded = false;
                     }
+
+
+
+
                 }
-                else
+                for (int i = 0; i < allSounds.Count; i++)
                 {
-                    hasEnded = false;
+                    mciSendString("stop " + allSounds[i].trackName, sb, 0, IntPtr.Zero);
+                    mciSendString("close " + allSounds[i].trackName, sb, 0, IntPtr.Zero);
                 }
-
-                
-
-
             }
-            for(int i=0; i< allSounds.Count; i++)
+            else
             {
-                mciSendString("stop " + allSounds[i].trackName, sb, 0, IntPtr.Zero);
-                mciSendString("close " + allSounds[i].trackName, sb, 0, IntPtr.Zero);
+                StopNow = false;
             }
-           
 
         }
 
@@ -246,23 +251,26 @@ namespace DynamicDrive
                 }
                 //PlayAll();
                 ThreadStart ts = new ThreadStart(PlayAll);
-                if(RunningThread!= null && RunningThread.IsAlive)
-                {
-                    Stop();
-                    if (!RunningThread.Join(250))
-                    {
-                        RunningThread.Abort();
-                    }
-                    RunningThread = new Thread(ts);
-                    RunningThread.Start();
-                }
-                else
-                {
-                    System.Diagnostics.Debug.WriteLine("Running Thread was null");
-                    RunningThread = new Thread(ts);
-                    RunningThread.Start(); 
-                }
-                
+                Stop();
+                //Thread.Sleep(100);
+                StopNow = false;
+                if(RunningThread!=null)
+                    RunningThread.Join();
+
+                RunningThread = new Thread(ts);
+                RunningThread.Start();
+
+                //if (RunningThread != null && RunningThread.IsAlive)
+                //{
+
+                //}
+                //else
+                //{
+                //    System.Diagnostics.Debug.WriteLine("Running Thread was null");
+                //    RunningThread = new Thread(ts);
+                //    RunningThread.Start();
+                //}
+
 
                 //Thread WorkerThread = new Thread(ts);
                 //WorkerThread.Start();
@@ -278,7 +286,8 @@ namespace DynamicDrive
         public void Stop()
         {
             isBeingPlayed = false;
-           
+           StopNow = true;
+            Thread.Sleep(50);
             //System.Diagnostics.Debug.WriteLine("Stopping" + this.TrackName);
 
         }
