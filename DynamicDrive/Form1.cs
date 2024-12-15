@@ -178,9 +178,9 @@ namespace DynamicDrive
 
             if (!queue.Contains(additional))
             {
-                player.StopAll(queue);
+                //player.StopAll(queue);
                 queue.Add(additional);
-                player.PlaySelect(queue);
+                //player.PlaySelect(queue);
                 UpdateNowPlayingTB(queue);
             }
 
@@ -217,9 +217,9 @@ namespace DynamicDrive
         {
             if (queue.Contains(removal))
             {
-                player.StopAll(queue);
+                //player.StopAll(queue);
                 queue.Remove(removal);
-                player.PlaySelect(queue);
+                //player.PlaySelect(queue);
                 UpdateNowPlayingTB(queue);
 
             }
