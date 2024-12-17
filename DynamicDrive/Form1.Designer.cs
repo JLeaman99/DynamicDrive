@@ -46,6 +46,10 @@
             button2 = new Button();
             speedChange_tb = new TextBox();
             button3 = new Button();
+            btn_carInit = new Button();
+            comboBox1 = new ComboBox();
+            label8 = new Label();
+            textBox1 = new TextBox();
             SuspendLayout();
             // 
             // car_tb
@@ -67,14 +71,14 @@
             // 
             // carSpd_tb
             // 
-            carSpd_tb.Location = new Point(492, 195);
+            carSpd_tb.Location = new Point(489, 195);
             carSpd_tb.Name = "carSpd_tb";
             carSpd_tb.Size = new Size(100, 23);
             carSpd_tb.TabIndex = 2;
             // 
             // textBox2
             // 
-            textBox2.Location = new Point(648, 195);
+            textBox2.Location = new Point(645, 195);
             textBox2.Name = "textBox2";
             textBox2.Size = new Size(100, 23);
             textBox2.TabIndex = 3;
@@ -82,7 +86,7 @@
             // label2
             // 
             label2.AutoSize = true;
-            label2.Location = new Point(492, 177);
+            label2.Location = new Point(489, 177);
             label2.Name = "label2";
             label2.Size = new Size(60, 15);
             label2.TabIndex = 4;
@@ -91,7 +95,7 @@
             // label3
             // 
             label3.AutoSize = true;
-            label3.Location = new Point(649, 178);
+            label3.Location = new Point(646, 178);
             label3.Name = "label3";
             label3.Size = new Size(112, 15);
             label3.TabIndex = 5;
@@ -100,7 +104,7 @@
             // label4
             // 
             label4.AutoSize = true;
-            label4.Location = new Point(649, 248);
+            label4.Location = new Point(646, 248);
             label4.Name = "label4";
             label4.Size = new Size(123, 15);
             label4.TabIndex = 9;
@@ -110,7 +114,7 @@
             // label5
             // 
             label5.AutoSize = true;
-            label5.Location = new Point(492, 247);
+            label5.Location = new Point(489, 247);
             label5.Name = "label5";
             label5.Size = new Size(71, 15);
             label5.TabIndex = 8;
@@ -118,14 +122,14 @@
             // 
             // textBox3
             // 
-            textBox3.Location = new Point(648, 265);
+            textBox3.Location = new Point(645, 265);
             textBox3.Name = "textBox3";
             textBox3.Size = new Size(100, 23);
             textBox3.TabIndex = 7;
             // 
             // engRPM_tb
             // 
-            engRPM_tb.Location = new Point(492, 265);
+            engRPM_tb.Location = new Point(489, 265);
             engRPM_tb.Name = "engRPM_tb";
             engRPM_tb.Size = new Size(100, 23);
             engRPM_tb.TabIndex = 6;
@@ -166,7 +170,7 @@
             // 
             // button1
             // 
-            button1.Location = new Point(564, 57);
+            button1.Location = new Point(220, 240);
             button1.Name = "button1";
             button1.Size = new Size(75, 23);
             button1.TabIndex = 14;
@@ -176,7 +180,7 @@
             // 
             // button2
             // 
-            button2.Location = new Point(564, 99);
+            button2.Location = new Point(220, 269);
             button2.Name = "button2";
             button2.Size = new Size(75, 23);
             button2.TabIndex = 15;
@@ -201,11 +205,54 @@
             button3.UseVisualStyleBackColor = true;
             button3.Click += button3_Click;
             // 
+            // btn_carInit
+            // 
+            btn_carInit.Location = new Point(489, 109);
+            btn_carInit.Name = "btn_carInit";
+            btn_carInit.Size = new Size(84, 23);
+            btn_carInit.TabIndex = 18;
+            btn_carInit.Text = "Initalize Car";
+            btn_carInit.UseVisualStyleBackColor = true;
+            btn_carInit.Click += btn_carInit_Click;
+            // 
+            // comboBox1
+            // 
+            comboBox1.FormattingEnabled = true;
+            comboBox1.Items.AddRange(new object[] { "COM5", "COM6", "COM7" });
+            comboBox1.Location = new Point(489, 41);
+            comboBox1.Name = "comboBox1";
+            comboBox1.Size = new Size(84, 23);
+            comboBox1.TabIndex = 19;
+            comboBox1.SelectedIndexChanged += comboBox1_SelectedIndexChanged;
+            // 
+            // label8
+            // 
+            label8.AutoSize = true;
+            label8.Location = new Point(489, 23);
+            label8.Name = "label8";
+            label8.Size = new Size(84, 15);
+            label8.TabIndex = 20;
+            label8.Text = "COM Interface";
+            // 
+            // textBox1
+            // 
+            textBox1.Location = new Point(589, 38);
+            textBox1.Multiline = true;
+            textBox1.Name = "textBox1";
+            textBox1.Size = new Size(209, 94);
+            textBox1.TabIndex = 21;
+            textBox1.Text = "COM5 is the Top Right USB Port\r\n\r\nCOM6 is the Bottom Right USB Port\r\n\r\nCOM7 is the Left USB3.0 Port";
+            textBox1.TextChanged += textBox1_TextChanged;
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 450);
+            Controls.Add(textBox1);
+            Controls.Add(label8);
+            Controls.Add(comboBox1);
+            Controls.Add(btn_carInit);
             Controls.Add(button3);
             Controls.Add(speedChange_tb);
             Controls.Add(button2);
@@ -250,5 +297,9 @@
         private Button button2;
         private TextBox speedChange_tb;
         private Button button3;
+        private Button btn_carInit;
+        private ComboBox comboBox1;
+        private Label label8;
+        private TextBox textBox1;
     }
 }

@@ -21,9 +21,9 @@ namespace DynamicDrive
         public CarData carData;
         public int engineRPM, engineRPMRaw, Speed, SpeedRaw;
         public byte IOBData;
-        public CANInterface() 
+        public CANInterface(string com) 
         {
-            comPort = "COM5"; //COM5 Left USB 3, COM6 RIGHT BOTTOM USB, COM7 RIGHT TOP USB
+            comPort = com; //COM5 Left USB 3, COM6 RIGHT BOTTOM USB, COM7 RIGHT TOP USB
             connection = new SerialConnection(comPort);
             car  = new ELM327(connection, new OBDConsoleLogger(OBDLogLevel.Debug));
             car.Initialize();

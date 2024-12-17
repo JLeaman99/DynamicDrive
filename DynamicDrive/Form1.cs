@@ -1,3 +1,4 @@
+using System.ComponentModel;
 using System.Timers;
 
 namespace DynamicDrive
@@ -10,9 +11,9 @@ namespace DynamicDrive
         String BackingTrack, First, Second, Third, Fourth, Fifth, Sixth;
         String FolderPath;
         SoundObject[] testObjects;
-        int counter = 0;
-        int test = 0, currentPlayingLevel=0;
-
+        int counter = 1;
+        int test = 0, currentPlayingLevel = 0;
+        string ComPort = "COM5";
         List<SoundObject> currentPlaying;
         System.Timers.Timer carloopTimer, musicTimer;
         public Form1()
@@ -48,7 +49,6 @@ namespace DynamicDrive
             carloopTimer = new System.Timers.Timer(50);
             carloopTimer.Elapsed += CarLoop;
             carloopTimer.AutoReset = true;
-            carloopTimer.Start();
 
             //musicTimer = new System.Timers.Timer(500);
             ////musicTimer.Elapsed += CheckStatus;
@@ -68,17 +68,23 @@ namespace DynamicDrive
 
         public void CarLoop(object sender, ElapsedEventArgs e)
         {
-            if (myCar!=null) //myCar == null
+            if (myCar != null) //myCar == null
             {
                 return;
             }
             else
             {
-                //myCar.CANMonitor(car_tb, engRPM_tb, carSpd_tb);
-                //car_tb.AppendText(myCar.carData.ToString());
+                if (myCar != null)
+                {
+                    myCar.CANMonitor(car_tb, engRPM_tb, carSpd_tb);
+                    car_tb.AppendText(myCar.carData.ToString());
+                    test = myCar.carData.VehicleSpeed.Speed;
+                }
+
                 //System.Diagnostics.Debug.WriteLine(test);
+
                 int change = GetRangeLevel(test);
-                if(change != currentPlayingLevel)
+                if (change != currentPlayingLevel)
                 {
                     currentPlayingLevel = change;
                     ChangeQueue(change);
@@ -96,9 +102,9 @@ namespace DynamicDrive
                 int i when i > 40 && i <= 50 => 3,
                 int i when i > 50 && i <= 60 => 4,
                 int i when i > 60 && i <= 70 => 5,
-                int i when i > 70 && i<= 80=> 6,
-                int i when i >80 => 7,
-             
+                int i when i > 70 && i <= 80 => 6,
+                int i when i > 80 => 7,
+
                 _ => 0
             };
             return level;
@@ -191,9 +197,9 @@ namespace DynamicDrive
         {
             try
             {
-                if(nowPlayingTB.InvokeRequired)
+                if (nowPlayingTB.InvokeRequired)
                 {
-                    Action safeWrite = delegate { UpdateNowPlayingTB(queue);  };
+                    Action safeWrite = delegate { UpdateNowPlayingTB(queue); };
                     nowPlayingTB.Invoke(safeWrite);
                 }
                 else
@@ -204,13 +210,13 @@ namespace DynamicDrive
                         nowPlayingTB.AppendText(queue[i].trackName + "\n");
                     }
                 }
-                
+
             }
             catch (Exception e)
             {
 
             }
-          
+
         }
 
         public void RemoveFromQueue(List<SoundObject> queue, SoundObject removal)
@@ -232,6 +238,28 @@ namespace DynamicDrive
             player.PlaySelect(currentPlaying);
 
         }
+
+        public void WriteTextSafe(TextBox control, String value)
+        {
+            try
+            {
+                if (control.InvokeRequired)
+                {
+                    Action safeWrite = delegate { WriteTextSafe(control, value); };
+                    control.Invoke(safeWrite);
+                }
+                else { control.Text = value; }
+            }
+            catch (Exception e)
+            {
+                if (e is InvalidAsynchronousStateException)
+                {
+                    control.Text = value;
+                }
+                else if (e is ObjectDisposedException) { this.Hide(); }
+            }
+        }
+
 
         //public void CheckStatus(object sender, ElapsedEventArgs e)
         //{
@@ -260,8 +288,26 @@ namespace DynamicDrive
 
         private void button3_Click(object sender, EventArgs e)
         {
-            if(speedChange_tb.TextLength != 0)
+            if (speedChange_tb.TextLength != 0)
                 test = int.Parse(speedChange_tb.Text);
+        }
+
+        private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            ComPort = comboBox1.SelectedItem.ToString();
+            System.Diagnostics.Debug.WriteLine("COM SELECTED :" + ComPort);
+        }
+
+        private void btn_carInit_Click(object sender, EventArgs e)
+        {
+            myCar = new CANInterface(ComPort);
+            carloopTimer.Start();
+
+        }
+
+        private void textBox1_TextChanged(object sender, EventArgs e)
+        {
+
         }
     }
 }
