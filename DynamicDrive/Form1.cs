@@ -68,7 +68,7 @@ namespace DynamicDrive
 
         public void CarLoop(object sender, ElapsedEventArgs e)
         {
-            if (myCar != null) //myCar == null
+            if (myCar == null) //myCar == null
             {
                 return;
             }
@@ -77,8 +77,13 @@ namespace DynamicDrive
                 if (myCar != null)
                 {
                     myCar.CANMonitor(car_tb, engRPM_tb, carSpd_tb);
-                    car_tb.AppendText(myCar.carData.ToString());
-                    test = myCar.carData.VehicleSpeed.Speed;
+                    if(myCar.carData != null)
+                    {
+                        //AppendTextSafe(car_tb, myCar.carData.ToString());
+                        //car_tb.AppendText(myCar.carData.ToString());
+                        test = myCar.carData.VehicleSpeed.Speed;
+                    }
+                    
                 }
 
                 //System.Diagnostics.Debug.WriteLine(test);
@@ -257,6 +262,27 @@ namespace DynamicDrive
                     control.Text = value;
                 }
                 else if (e is ObjectDisposedException) { this.Hide(); }
+            }
+        }
+
+        public void AppendTextSafe(TextBox control, String value)
+        {
+            try
+            {
+                if (control.InvokeRequired)
+                {
+                    Action safeWrite = delegate { AppendTextSafe(control, value); };
+                    control.Invoke(safeWrite);
+                }
+                else { control.Text = value; }
+            }
+            catch (Exception e)
+            {
+                if (e is InvalidAsynchronousStateException)
+                {
+                    control.AppendText(value);
+                }
+
             }
         }
 

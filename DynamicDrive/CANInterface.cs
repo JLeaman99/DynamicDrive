@@ -146,6 +146,11 @@ namespace DynamicDrive
         public IOBDData data = null;
         //ADD Other data Types as needed
 
+        public CarData()
+        {
+            EngineRPM = new EngineRPM();
+            VehicleSpeed = new VehicleSpeed();
+        }
         public override string ToString()
         {
 
