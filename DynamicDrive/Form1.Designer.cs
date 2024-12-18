@@ -222,6 +222,7 @@
             comboBox1.Location = new Point(489, 41);
             comboBox1.Name = "comboBox1";
             comboBox1.Size = new Size(84, 23);
+            comboBox1.SelectedIndex = 0;
             comboBox1.TabIndex = 19;
             comboBox1.SelectedIndexChanged += comboBox1_SelectedIndexChanged;
             // 

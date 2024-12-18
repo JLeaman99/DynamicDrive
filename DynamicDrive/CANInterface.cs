@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Net.Http.Headers;
 using System.Text;
@@ -58,15 +59,64 @@ namespace DynamicDrive
                 carData.EngineRPM = engineRpm;
                 carData.VehicleSpeed = vehicleSpeed;
                 System.Diagnostics.Debug.WriteLine("Engine RPM: "+ engineRpm.ToString() + " Car Speed:" + vehicleSpeed.ToString());
-                AllData.AppendText("Engine RPM: " + engineRpm.ToString() + " Car Speed:" + vehicleSpeed.ToString()); 
-                EngRPM.Text = engineRpm.ToString();
-                CarSpeed.Text = vehicleSpeed.ToString();
+                //AllData.AppendText("Engine RPM: " + engineRpm.ToString() + " Car Speed:" + vehicleSpeed.ToString());
+
+                AppendTextSafe(AllData, "Engine RPM: " + engineRpm.ToString() + " Car Speed:" + vehicleSpeed.ToString());
+
+                WriteTextSafe(EngRPM, engineRpm.ToString());
+                WriteTextSafe(CarSpeed, vehicleSpeed.ToString());
+                //EngRPM.Text = ;
+                //CarSpeed.Text = ;
 
                 Thread.Sleep(100);
             }
 
         }
-   
+
+        public void WriteTextSafe(TextBox control, String value)
+        {
+            try
+            {
+                if (control.InvokeRequired)
+                {
+                    Action safeWrite = delegate { WriteTextSafe(control, value); };
+                    control.Invoke(safeWrite);
+                }
+                else { control.Text = value; }
+            }
+            catch (Exception e)
+            {
+                if (e is InvalidAsynchronousStateException)
+                {
+                    control.Text = value;
+                }
+               
+            }
+        }
+
+        public void AppendTextSafe(TextBox control, String value)
+        {
+            try
+            {
+                if (control.InvokeRequired)
+                {
+                    Action safeWrite = delegate { AppendTextSafe(control, value); };
+                    control.Invoke(safeWrite);
+                }
+                else { control.Text = value; }
+            }
+            catch (Exception e)
+            {
+                if (e is InvalidAsynchronousStateException)
+                {
+                    control.AppendText(value);
+                }
+               
+            }
+        }
+
+
+
 
 
         public async void CANMonitor(TextBox AllData, TextBox EngRPM, TextBox CarSpeed)
