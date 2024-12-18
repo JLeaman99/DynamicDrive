@@ -160,7 +160,7 @@ namespace DynamicDrive
                 {
                     sb.Clear();
                     sb = new StringBuilder();
-                    mciSendString("status " + allSounds[0].trackName + " position", sb, 255, IntPtr.Zero);
+                    mciSendString("status " + allSounds[0].trackName + " position", sb, 255, IntPtr.Zero); //Error occurs here
                     pos = Convert.ToInt32(sb.ToString());
                     //System.Diagnostics.Debug.WriteLine("pos" + pos);
 

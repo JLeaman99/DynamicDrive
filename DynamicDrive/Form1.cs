@@ -161,7 +161,8 @@ namespace DynamicDrive
                 while (counter >= step)
                 {
                     System.Diagnostics.Debug.WriteLine(String.Format("Counter Value: {0}, TestObjectsL: {1}, CurrentPlayingL {2}", counter, testObjects.Length, currentPlaying.Count));
-                    RemoveFromQueue(currentPlaying, testObjects[counter]);
+                    if (counter > 0)
+                        RemoveFromQueue(currentPlaying, testObjects[counter]);
                     counter--;
                     if (counter < 0)
                         counter = 0;
