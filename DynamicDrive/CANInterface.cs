@@ -15,6 +15,7 @@ namespace DynamicDrive
 {
     internal class CANInterface
     {
+
         String comPort;
         SerialConnection connection;
         ELM327 car;

@@ -31,12 +31,8 @@
             car_tb = new TextBox();
             label1 = new Label();
             carSpd_tb = new TextBox();
-            textBox2 = new TextBox();
             label2 = new Label();
-            label3 = new Label();
-            label4 = new Label();
             label5 = new Label();
-            textBox3 = new TextBox();
             engRPM_tb = new TextBox();
             label6 = new Label();
             nowPlayingTB = new TextBox();
@@ -50,6 +46,10 @@
             comboBox1 = new ComboBox();
             label8 = new Label();
             textBox1 = new TextBox();
+            textBox3 = new TextBox();
+            label4 = new Label();
+            label3 = new Label();
+            textBox2 = new TextBox();
             SuspendLayout();
             // 
             // car_tb
@@ -76,13 +76,6 @@
             carSpd_tb.Size = new Size(100, 23);
             carSpd_tb.TabIndex = 2;
             // 
-            // textBox2
-            // 
-            textBox2.Location = new Point(645, 195);
-            textBox2.Name = "textBox2";
-            textBox2.Size = new Size(100, 23);
-            textBox2.TabIndex = 3;
-            // 
             // label2
             // 
             label2.AutoSize = true;
@@ -92,25 +85,6 @@
             label2.TabIndex = 4;
             label2.Text = "Car Speed";
             // 
-            // label3
-            // 
-            label3.AutoSize = true;
-            label3.Location = new Point(646, 178);
-            label3.Name = "label3";
-            label3.Size = new Size(112, 15);
-            label3.TabIndex = 5;
-            label3.Text = "Raw Car Speed Data";
-            // 
-            // label4
-            // 
-            label4.AutoSize = true;
-            label4.Location = new Point(646, 248);
-            label4.Name = "label4";
-            label4.Size = new Size(123, 15);
-            label4.TabIndex = 9;
-            label4.Text = "Raw Engine RPM Data";
-            label4.Click += label4_Click;
-            // 
             // label5
             // 
             label5.AutoSize = true;
@@ -119,13 +93,6 @@
             label5.Size = new Size(71, 15);
             label5.TabIndex = 8;
             label5.Text = "Engine RPM";
-            // 
-            // textBox3
-            // 
-            textBox3.Location = new Point(645, 265);
-            textBox3.Name = "textBox3";
-            textBox3.Size = new Size(100, 23);
-            textBox3.TabIndex = 7;
             // 
             // engRPM_tb
             // 
@@ -222,7 +189,6 @@
             comboBox1.Location = new Point(489, 41);
             comboBox1.Name = "comboBox1";
             comboBox1.Size = new Size(84, 23);
-            comboBox1.SelectedIndex = 0;
             comboBox1.TabIndex = 19;
             comboBox1.SelectedIndexChanged += comboBox1_SelectedIndexChanged;
             // 
@@ -244,6 +210,39 @@
             textBox1.TabIndex = 21;
             textBox1.Text = "COM5 is the Top Right USB Port\r\n\r\nCOM6 is the Bottom Right USB Port\r\n\r\nCOM7 is the Left USB3.0 Port";
             textBox1.TextChanged += textBox1_TextChanged;
+            // 
+            // textBox3
+            // 
+            textBox3.Location = new Point(645, 265);
+            textBox3.Name = "textBox3";
+            textBox3.Size = new Size(100, 23);
+            textBox3.TabIndex = 7;
+            // 
+            // label4
+            // 
+            label4.AutoSize = true;
+            label4.Location = new Point(646, 248);
+            label4.Name = "label4";
+            label4.Size = new Size(123, 15);
+            label4.TabIndex = 9;
+            label4.Text = "Raw Engine RPM Data";
+            label4.Click += label4_Click;
+            // 
+            // label3
+            // 
+            label3.AutoSize = true;
+            label3.Location = new Point(646, 178);
+            label3.Name = "label3";
+            label3.Size = new Size(112, 15);
+            label3.TabIndex = 5;
+            label3.Text = "Raw Car Speed Data";
+            // 
+            // textBox2
+            // 
+            textBox2.Location = new Point(645, 195);
+            textBox2.Name = "textBox2";
+            textBox2.Size = new Size(100, 23);
+            textBox2.TabIndex = 3;
             // 
             // Form1
             // 
@@ -280,15 +279,11 @@
 
         #endregion
 
-        private TextBox car_tb;
+        public TextBox car_tb;
         private Label label1;
         private TextBox carSpd_tb;
-        private TextBox textBox2;
         private Label label2;
-        private Label label3;
-        private Label label4;
         private Label label5;
-        private TextBox textBox3;
         private TextBox engRPM_tb;
         private Label label6;
         private TextBox nowPlayingTB;
@@ -302,5 +297,9 @@
         private ComboBox comboBox1;
         private Label label8;
         private TextBox textBox1;
+        private TextBox textBox3;
+        private Label label4;
+        private Label label3;
+        private TextBox textBox2;
     }
 }

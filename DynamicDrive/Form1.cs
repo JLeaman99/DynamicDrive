@@ -328,7 +328,15 @@ namespace DynamicDrive
         private void btn_carInit_Click(object sender, EventArgs e)
         {
             myCar = new CANInterface(ComPort);
+
             carloopTimer.Start();
+
+            if (myCar ==null)
+            {
+                btn_carInit.Enabled = false;
+                btn_carInit.Text = "Initalized";
+                btn_carInit.BackColor = Color.GreenYellow;
+            }
 
         }
 
