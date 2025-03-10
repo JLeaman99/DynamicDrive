@@ -1,6 +1,6 @@
 This is my take on the Mercedes & Will.I.am Collab Sound Drive.
 
-[![Watch the video]([https://youtu.be/vt5fpE0bzSY](https://www.youtube.com/shorts/NfBV0JRV3dU))
+[![Watch the video](https://img.youtube.com/vi/T-D1KVIuvjA/maxresdefault.jpg)](https://youtu.be/T-D1KVIuvjA)
 
 How Does it Work?
 
