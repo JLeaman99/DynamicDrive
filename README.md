@@ -1,6 +1,6 @@
 This is my take on the Mercedes & Will.I.am Collab Sound Drive.
 
-[![Watch the video]([https://img.youtube.com/vi/T-D1KVIuvjA/maxresdefault.jpg](https://static.vecteezy.com/system/resources/previews/036/167/795/non_2x/set-of-musical-note-icons-music-notes-thin-and-bold-music-note-symbols-collection-isolated-on-white-background-flat-or-linear-design-objects-for-card-poster-mobile-application-icon-vector.jpg))](https://youtube.com/shorts/NfBV0JRV3dU?si=4Rf9HGY1fSXK7yuX)
+[![Watch the video](https://www.publicdomainpictures.net/pictures/280000/nahled/music-note-silhouette.jpg)](https://youtube.com/shorts/NfBV0JRV3dU?si=4Rf9HGY1fSXK7yuX)
 
 How Does it Work?
 
