@@ -1,5 +1,7 @@
 This is my take on the Mercedes & Will.I.am Collab Sound Drive.
 
+Original Video: https://youtube.com/shorts/NfBV0JRV3dU?si=4Rf9HGY1fSXK7yuX or Click on the Music Notes to be taken to YouTube
+
 [![Watch the video](https://www.publicdomainpictures.net/pictures/280000/nahled/music-note-silhouette.jpg)](https://youtube.com/shorts/NfBV0JRV3dU?si=4Rf9HGY1fSXK7yuX)
 
 How Does it Work?
